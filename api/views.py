@@ -150,25 +150,34 @@ class EmployeeDetail(generics.RetrieveUpdateDestroyAPIView):
 
 # view set instead if generics
 from rest_framework import viewsets
+from api.paginations import CustomPagination
+from employees.filters import EmployeeFilter
 class EmployeeViewSet(viewsets.ModelViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
-    
+    pagination_class = CustomPagination
+    # general filtering
+    # filterset_fields = ['designation']
+    # custom filtering
+    filterset_class = EmployeeFilter
 
 
 # blogs and comment nested serializer 
 from rest_framework import mixins , generics
 from blogs.models import Blog,Comment
 from blogs.serializers import BlogSerializer ,CommentSerializer
-
+from rest_framework.filters import SearchFilter 
 class blogview(generics.ListCreateAPIView):
     queryset = Blog.objects.all()
     serializer_class = BlogSerializer
+    search_fields = ['blog_title','blog_body']
+    filter_backends = [SearchFilter]
     lookup_field = 'pk'
 
 class blogviewdetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Blog.objects.all()
     serializer_class = BlogSerializer
+
 
 # ========================
 
